@@ -4,6 +4,7 @@
 > 의존성 다운로드가 막힌 환경에서 작성해 **컴파일·실행은 검증하지 않았습니다.**
 
 ## 역할
+- 로그인 요청의 User-Agent를 시큐리티 서버로 넘김 → ✅ 성공 이력의 "브라우저" 항목
 로그인 API(/api/auth/login)로 받아 FeignClient로 시큐리티 서버에 검증을 맡기고, 성공하면 JWT와 Refresh Token 발급. Spring Authorization Server는 서명 키·공개키(JWKS) 제공
 
 ## 빌드

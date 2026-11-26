@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
              configuration = SecurityServerFeignConfig.class)
 public interface SecurityServerClient {
 
-    record VerifyRequest(String loginId, String password, String loginType, String mfaCode, String clientIp) {}
+    record VerifyRequest(String loginId, String password, String loginType, String mfaCode, String clientIp,
+                         String userAgent) {}   // userAgent: ✅ 로그인 성공 이력의 "브라우저" 항목
 
     /** 로그인 규칙 검사 + 성공 시 Redis 세션 생성(setSession). 돌려받는 sid를 JWT에 넣는다 */
     record LoginResult(String userId, String userType, String sid) {}

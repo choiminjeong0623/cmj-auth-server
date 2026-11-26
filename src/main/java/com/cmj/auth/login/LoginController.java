@@ -29,7 +29,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public TokenResponse login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
-        return loginService.login(request, clientIp(http));
+        return loginService.login(request, clientIp(http), http.getHeader("User-Agent"));
     }
 
     /** Access Token 재발급 (⚠️ 재발급도 같은 방식이었는지는 미확인) */

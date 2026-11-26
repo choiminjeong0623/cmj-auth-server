@@ -32,13 +32,13 @@ public class LoginService {
         this.sessions = sessions;
     }
 
-    public TokenResponse login(LoginRequest req, String clientIp) {
+    public TokenResponse login(LoginRequest req, String clientIp, String userAgent) {
         String loginType = req.loginType() == null ? "ID" : req.loginType();
 
         // 1) 로그인 규칙 검사 + 성공 시 세션 생성(setSession)은 시큐리티 서버 — FeignClient 호출
         //    실패하면 ErrorDecoder가 LoginFailureException(이유 코드 + 남은 횟수 등)으로 바꿔 던짐 → 401
         SecurityServerClient.LoginResult result = securityServer.verify(new SecurityServerClient.VerifyRequest(
-            req.loginId(), req.password(), loginType, req.mfaCode(), clientIp));
+            req.loginId(), req.password(), loginType, req.mfaCode(), clientIp, userAgent));
 
         // 2) Access Token(JWT): sub·user_type·sid
         // 3) Refresh Token: Redis (rt:{token})
