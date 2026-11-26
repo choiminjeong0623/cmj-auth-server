@@ -22,6 +22,7 @@ dependencyManagement {
 dependencies {
     implementation 'com.cmj:common-security:1.0.0'     // 공통 보안 라이브러리 (별도 저장소 cmj-common-security)
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'   // 로그인 요청 입력값 검사(@Valid) → 400
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'

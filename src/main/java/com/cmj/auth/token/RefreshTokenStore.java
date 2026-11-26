@@ -3,20 +3,18 @@ package com.cmj.auth.token;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.stereotype.Component;
 import com.cmj.auth.config.AuthProperties;
 
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Optional;
 
 /**
  * Refresh Token을 Redis에 둔다. ✅ 실제 프로젝트도 Refresh Token은 Redis (직접 개발했는지는 미확인)
  *
- *   rt:{refreshToken} → {"userId","sid","clientId"}   TTL = 최대 수명
+ *   rt:{refreshToken} → {"userId","sid"}   TTL = 최대 수명
  *
  * v1과 다른 점: 중복 로그인·미사용 자동 로그아웃은 여기서 판단하지 않는다.
  *   → 사용자 세션(session:{userId}, common-security의 SessionStore)이 담당하고,
@@ -36,13 +34,13 @@ public class RefreshTokenStore {
         this.maxLifetime = props.refreshMaxLifetime();
     }
 
-    public record Entry(String userId, String sid, String clientId) {}
+    public record Entry(String userId, String sid) {}
 
-    public OAuth2RefreshToken issue(Entry entry) {
+    /** 로그인에 성공한 시점에만 호출됨 — 미리 올려 둘 수 없는 값 (📘 Q27) */
+    public String issue(Entry entry) {
         String value = randomToken();
-        Instant now = Instant.now();
-        redis.opsForValue().set("rt:" + value, toJson(entry), maxLifetime);   // ← Redis 저장 (setSession과 같은 opsForValue().set)
-        return new OAuth2RefreshToken(value, now, now.plus(maxLifetime));
+        redis.opsForValue().set("rt:" + value, toJson(entry), maxLifetime);   // ← Redis 저장
+        return value;
     }
 
     /** 한 번 쓴 Refresh Token은 지운다 (rotation). 도난된 토큰의 재사용을 줄인다 */
