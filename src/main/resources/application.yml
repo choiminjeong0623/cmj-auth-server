@@ -1,0 +1,21 @@
+server:
+  port: 9000
+
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+cmj:
+  auth:
+    issuer: https://auth.cmj.example
+    portal-client-id: portal-web
+    portal-client-secret: "{noop}change-me"   # 예시. 운영은 {bcrypt} 해시 + 비밀 저장소
+    access-token-ttl: 10m                     # ⚠️ 예시 값
+    refresh-max-lifetime: 8h                  # ⚠️ 예시 값
+    security-server-url: http://security-server:9100
+    internal-api-key: ${INTERNAL_API_KEY}
+  common-security:
+    web-filter: false            # auth-server는 자기 보안 설정(인가 서버)이 있으므로 공통 필터는 끔
+    session-idle-timeout: 30m    # 미사용 자동 로그아웃 시간 — ⚠️ 실제 값 미확인
